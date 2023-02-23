@@ -5,6 +5,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,12 +32,14 @@ public class atm implements CommandExecutor {
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
+            sender.sendMessage(prefix+ ChatColor.RED + "rspがnullです");
             return false;
         }
         econ = rsp.getProvider();
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         Player e = (Player) sender;
-        EconomyResponse r = econ.bankBalance(e.getName());
+        OfflinePlayer r = Bukkit.getOfflinePlayer(e.getName());
+        double mo = econ.getBalance(r);
         if(args.length == 0){
             //お金を入れて下さい、というタイトルのインベントリを表示
             Inventory inv = e.getServer().createInventory(null, 9, prefix+ChatColor.GREEN+"お金を入れて下さい");
@@ -71,15 +74,15 @@ public class atm implements CommandExecutor {
                 e.sendMessage(prefix + ChatColor.RED + "お金は100万円までしか入れられません");
                 return true;
             }
-            if (r.balance > Integer.parseInt(args[0])){
+            if (mo < Integer.parseInt(args[0])){
                 e.sendMessage(prefix + ChatColor.RED + "お金が足りません");
                 return true;
             }
-            r = econ.withdrawPlayer(e.getName(), Integer.parseInt(args[0]));
-            if(r.transactionSuccess()) {
+            EconomyResponse w = econ.withdrawPlayer(r, Integer.parseInt(args[0]));
+            if(w.transactionSuccess()) {
                 inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD+"通貨", ChatColor.GOLD+args[0]+"円"));
             } else {
-                sender.sendMessage(String.format("エラー: %s :運営に報告してください", r.errorMessage));
+                sender.sendMessage(String.format("エラー: %s :運営に報告してください", w.errorMessage));
             }
             e.sendMessage(prefix+ChatColor.GREEN+"お金を入れました");
         }

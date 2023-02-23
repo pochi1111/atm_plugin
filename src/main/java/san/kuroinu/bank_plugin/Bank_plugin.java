@@ -7,6 +7,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import san.kuroinu.bank_plugin.Commands.atm;
 import san.kuroinu.bank_plugin.Commands.bank;
+import san.kuroinu.bank_plugin.Commands.newbank;
+import san.kuroinu.bank_plugin.Commands.opatm;
 
 public final class Bank_plugin extends JavaPlugin {
     public static JavaPlugin plugin;
@@ -22,6 +24,7 @@ public final class Bank_plugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(this.listeners, this);
         getCommand("bank").setExecutor(new bank());
         getCommand("atm").setExecutor(new atm());
+        getCommand("opatm").setExecutor(new opatm());
         super.onEnable();
     }
     private boolean setupEconomy() {

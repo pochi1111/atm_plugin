@@ -5,6 +5,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -30,6 +31,7 @@ public class Listeners implements Listener {
                 return;
             }
             econ = rsp.getProvider();
+            event.getPlayer().sendMessage(prefix + ChatColor.GREEN + "お金を入れて下さい、というインベントリを閉じました");
             //お金を入れる
             ItemStack memo = null;
             int addMoney = 0;
@@ -50,9 +52,12 @@ public class Listeners implements Listener {
                 }
                 addMoney += Integer.parseInt(lore)*memo.getAmount();
             }
-            EconomyResponse r = econ.bankDeposit(event.getPlayer().getName(),addMoney);
+            OfflinePlayer off_p = Bukkit.getOfflinePlayer(event.getPlayer().getName());
+            EconomyResponse r = econ.depositPlayer(off_p,addMoney);
             if(r.transactionSuccess()) {
-                event.getPlayer().sendMessage(prefix + ChatColor.GREEN + "お金を入れました 残高は"+r.balance+"円です");
+                event.getPlayer().sendMessage(prefix + ChatColor.GREEN + "お金を"+Double.toString(r.amount)+"入れました 残高は"+Double.toString(r.balance)+"円です");
+            }else{
+                event.getPlayer().sendMessage(prefix + ChatColor.RED + "お金を入れるのに失敗しました");
             }
         }
         return;
