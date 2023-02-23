@@ -1,0 +1,13 @@
+name: Bank_plugin
+version: '${project.version}'
+main: san.kuroinu.bank_plugin.Bank_plugin
+api-version: 1.17x
+commands:
+  atm:
+    description: "atmです引数を入れるとお金をその分取り出します"
+    usage: "/atm"
+  bank:
+    description: "bankです今持っているお金を参照します"
+    usage: "/bank"
+depend:
+  - Vault
