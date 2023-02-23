@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -37,19 +38,21 @@ public class Listeners implements Listener {
             int addMoney = 0;
             String lore = null;
             for (int i=0;i < 9;i++){
-                memo = inv.getItem(1);
+                memo = inv.getItem(i);
                 if (memo == null) continue;
+                if (!memo.getType().equals(Material.GOLD_INGOT)) continue;
+                if(memo.getItemMeta().getLore() == null) continue;
                 lore = memo.getLore().toString();
-                if (memo.getType() == Material.GOLD_INGOT && lore.matches("[0-1000001]円")){
-                    lore.charAt(lore.length()-1);
-                }
-                //loreが数字かどうか
+                event.getPlayer().sendMessage(lore);
+                lore = lore.substring(1,lore.length()-2);
+                event.getPlayer().sendMessage(lore);
                 try {
                     Integer.parseInt(lore);
                 } catch (NumberFormatException ex) {
                     event.getPlayer().sendMessage(prefix + ChatColor.RED + "loreについてのエラー");
                     return;
                 }
+                event.getPlayer().sendMessage(prefix + ChatColor.GREEN + "お金を"+lore+"入れました");
                 addMoney += Integer.parseInt(lore)*memo.getAmount();
             }
             OfflinePlayer off_p = Bukkit.getOfflinePlayer(event.getPlayer().getName());

@@ -20,6 +20,10 @@ public class opatm implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player e = (Player) sender;
         Inventory inv = e.getInventory();
+        if (args.length != 1){
+            sender.sendMessage(prefix + ChatColor.RED + "引数の数が違います");
+            return true;
+        }
         if (inv.firstEmpty() == -1) {
             e.sendMessage(prefix + ChatColor.RED + "インベントリに空きがありません");
             return true;
@@ -44,7 +48,11 @@ public class opatm implements CommandExecutor {
             e.sendMessage(prefix + ChatColor.RED + "お金は100万円までしか入れられません");
             return true;
         }
-        inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD + "通貨", ChatColor.GOLD + args[0] + "円"));
+        if (!sender.isOp()){
+            e.sendMessage(prefix + ChatColor.RED + "このコマンドはOPのみ実行できます");
+            return true;
+        }
+        inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD + "通貨", args[0] + "円"));
         e.sendMessage(prefix + ChatColor.GREEN + "お金を入れました");
         return true;
     }

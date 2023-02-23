@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -80,7 +81,7 @@ public class atm implements CommandExecutor {
             }
             EconomyResponse w = econ.withdrawPlayer(r, Integer.parseInt(args[0]));
             if(w.transactionSuccess()) {
-                inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD+"通貨", ChatColor.GOLD+args[0]+"円"));
+                inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD+"通貨", args[0]+"円"));
             } else {
                 sender.sendMessage(String.format("エラー: %s :運営に報告してください", w.errorMessage));
             }
