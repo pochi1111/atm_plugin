@@ -31,15 +31,18 @@ public class atm implements CommandExecutor {
             sender.sendMessage(prefix + ChatColor.RED + "このコマンドはプレイヤーから実行してください");
             return true;
         }
+        //econを取得(操作するならこのコード必須)
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             sender.sendMessage(prefix+ ChatColor.RED + "rspがnullです");
             return false;
         }
         econ = rsp.getProvider();
+        //ここまで
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         Player e = (Player) sender;
         OfflinePlayer r = Bukkit.getOfflinePlayer(e.getName());
+        //OfflinePlayer rのお金を取得する double型で帰ってくるので直表示させると~~.0とかになる。
         double mo = econ.getBalance(r);
         if(args.length == 0){
             //お金を入れて下さい、というタイトルのインベントリを表示
@@ -79,6 +82,7 @@ public class atm implements CommandExecutor {
                 e.sendMessage(prefix + ChatColor.RED + "お金が足りません");
                 return true;
             }
+            //rからint(args[0])円だけ取り出す
             EconomyResponse w = econ.withdrawPlayer(r, Integer.parseInt(args[0]));
             if(w.transactionSuccess()) {
                 inv.addItem(createItemStack(Material.GOLD_INGOT, 1, ChatColor.GOLD+"通貨", args[0]+"円"));

@@ -56,6 +56,7 @@ public class Listeners implements Listener {
                 addMoney += Integer.parseInt(lore)*memo.getAmount();
             }
             OfflinePlayer off_p = Bukkit.getOfflinePlayer(event.getPlayer().getName());
+            //おかねいれるっす！
             EconomyResponse r = econ.depositPlayer(off_p,addMoney);
             if(r.transactionSuccess()) {
                 event.getPlayer().sendMessage(prefix + ChatColor.GREEN + "お金を"+Double.toString(r.amount)+"入れました 残高は"+Double.toString(r.balance)+"円です");

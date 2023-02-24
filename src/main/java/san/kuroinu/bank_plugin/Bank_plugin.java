@@ -21,6 +21,10 @@ public final class Bank_plugin extends JavaPlugin {
         // Plugin startup logic
         plugin = this;
         this.listeners = new Listeners();
+        //vaultが入っているかどうかチェックする
+        if (!setupEconomy()){
+            Bukkit.broadcastMessage("Vaultが入っていないかも?・。・");
+        }
         Bukkit.getPluginManager().registerEvents(this.listeners, this);
         getCommand("bank").setExecutor(new bank());
         getCommand("atm").setExecutor(new atm());
@@ -28,9 +32,11 @@ public final class Bank_plugin extends JavaPlugin {
         super.onEnable();
     }
     private boolean setupEconomy() {
+        //vaultが入っているか
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
+        //取得できるか
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             return false;
